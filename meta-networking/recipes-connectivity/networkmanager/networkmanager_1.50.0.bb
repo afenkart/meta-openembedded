@@ -85,7 +85,9 @@ PACKAGECONFIG ??= "readline nss ifupdown dnsmasq nmcli \
     ${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'vala', '', d)} \
 "
 
-INCLUDE_VALA ??= "${@bb.utils.contains('PACKAGECONFIG', 'vala', 'vala', '', d)}"
+INCLUDE_VALA ?= "vala"
+#INCLUDE_VALA = "${@bb.utils.contains('PACKAGECONFIG', 'vala', 'vala', '', d)}"
+#INCLUDE_VALA = "${@bb.utils.contains('PACKAGECONFIG', 'vala', 'vala', '', d)}"
 
 python __anonymous() {
     gi_enabled = d.getVar('GI_DATA_ENABLED')
@@ -100,7 +102,9 @@ python __anonymous() {
     bb.warn(f"PACKAGECONFIG: {packageconfig}")
 }
 
-inherit_defer vala
+# inherit_defer ${INCLUDE_VALA}
+inherit_defer ${@bb.utils.contains('INCLUDE_VALA', 'vala', 'vala', '', d)}
+
 
 PACKAGECONFIG[systemd] = "\
     -Dsystemdsystemunitdir=${systemd_unitdir}/system -Dsession_tracking=systemd,\
