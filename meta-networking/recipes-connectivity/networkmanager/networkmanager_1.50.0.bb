@@ -100,12 +100,10 @@ python __anonymous() {
     bb.warn(f"PACKAGECONFIG: {packageconfig}")
 }
 
-# PACKAGECONFIG ??= not yet evaluated -> empty string
-inherit_defer ${@'vala' if not d.getVar(PACKAGECONFIG) else ''}
-# 'vala' enabled by user
-inherit_defer ${@bb.utils.contains('PACKAGECONFIG', 'vala', 'vala', '', d)}
-
-
+# empty PACKAGECONFIG means default configuration above is used
+# setting PACKAGECONFIG =/?= is non-empty during evaluation
+inherit_defer ${@'vala' if not d.getVar(PACKAGECONFIG) \
+    else bb.utils.contains('PACKAGECONFIG', 'vala', 'vala', '', d)}
 
 PACKAGECONFIG[systemd] = "\
     -Dsystemdsystemunitdir=${systemd_unitdir}/system -Dsession_tracking=systemd,\
