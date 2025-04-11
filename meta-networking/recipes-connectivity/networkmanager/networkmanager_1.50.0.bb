@@ -86,7 +86,6 @@ PACKAGECONFIG ??= "readline nss ifupdown dnsmasq nmcli \
 "
 
 INCLUDE_VALA ??= "${@bb.utils.contains('PACKAGECONFIG', 'vala', 'vala', '', d)}"
-inherit_defer vala
 
 python __anonymous() {
     gi_enabled = d.getVar('GI_DATA_ENABLED')
@@ -99,14 +98,9 @@ python __anonymous() {
 
     packageconfig = d.getVar('PACKAGECONFIG')
     bb.warn(f"PACKAGECONFIG: {packageconfig}")
-
-    vala_class_path = d.expand("${COREBASE}/meta/classes-recipe/vala.bbclass")
-    if vala_enabled:
-        bb.warn("inherit vala")
-        #bb.parse.handle(vala_class_path, d, True)
-    else:
-        bb.warn("no inherit vala")
 }
+
+inherit_defer vala
 
 PACKAGECONFIG[systemd] = "\
     -Dsystemdsystemunitdir=${systemd_unitdir}/system -Dsession_tracking=systemd,\
