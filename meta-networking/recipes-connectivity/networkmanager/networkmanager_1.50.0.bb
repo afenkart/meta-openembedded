@@ -86,8 +86,6 @@ PACKAGECONFIG ??= "readline nss ifupdown dnsmasq nmcli \
 "
 
 INCLUDE_VALA ?= "vala"
-#INCLUDE_VALA = "${@bb.utils.contains('PACKAGECONFIG', 'vala', 'vala', '', d)}"
-#INCLUDE_VALA = "${@bb.utils.contains('PACKAGECONFIG', 'vala', 'vala', '', d)}"
 
 python __anonymous() {
     gi_enabled = d.getVar('GI_DATA_ENABLED')
@@ -98,14 +96,14 @@ python __anonymous() {
     include_vala = d.getVar('INCLUDE_VALA')
     bb.warn(f"INCLUDE_VALA: {include_vala}")
 
-    packageconfig = d.getVar(PACKAGECONFIG)
+    packageconfig = d.getVar('PACKAGECONFIG')
     bb.warn(f"PACKAGECONFIG: {packageconfig}")
 }
 
 # PACKAGECONFIG ??= not yet evaluated -> empty string
 inherit_defer ${@'vala' if not d.getVar(PACKAGECONFIG) else ''}
 # 'vala' enabled by user
-inherit_defer ${@bb.utils.contains('INCLUDE_VALA', 'vala', 'vala', '', d)}
+inherit_defer ${@bb.utils.contains('PACKAGECONFIG', 'vala', 'vala', '', d)}
 
 
 
